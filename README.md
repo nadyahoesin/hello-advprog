@@ -12,13 +12,15 @@ The `handle_connection` function will first create a [`BufReader`](https://doc.r
 
 This milestone is for successfully returning an HTML file to clients who connected to the web server. We did this by adding code in the `handle_connection` function to write a response to the stream. In order to be valid, the response must consist of status line (which in our case is `HTTP/1.1 200 OK`), `Content-Length` header, and the contents. The contents are from a simple HTML file we created called `hello.html`, attached below when rendered by the browser. This HTML file is written into the `contents` string by the `fs::read-to_string` function. The response is first converted into bytes by `as_bytes` method, before being written to the stream by `write_all` method. 
 
-![commit 2 screenshot](<Screenshot 2024-03-16 at 19.03.43.png>)
+![commit 2 screenshot](<img/commit2.png>)
 
 <br>
 
 ### Milestone 3: Validating request and selectively responding
 
-TBA
+This milestone is for successfully validating requests and returning different responseS based on the validity of the requests. We validate requests in the `handle_connection` function by examining the first line of each request. If it equals `GET / HTTP/1.1`, then it is a valid request. Clients trying to access other path (e.g. `127.0.0.1:7878/hello`) would send requests with different first line than above, which will be regarded as invalid requests. We handle valid requests the same way as before. For invalid request, we write a response to the stream with `HTTP/1.1 404 NOT FOUND` status line and contents from `404.html`, attached below when rendered by the browser. Initially, we did all this using similar code in two if blocks, only differing in status line and contents' filename. We then refactored the code to avoid repetitions by only using the if-clause to determine the status line and contents' filename, then executing the same code for both scenario (valid and invalid request).
+
+![commit 3 screenshot](<img/commit3.png>)
 
 <br>
 
