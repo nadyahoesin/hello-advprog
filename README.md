@@ -10,7 +10,9 @@ The `handle_connection` function will first create a [`BufReader`](https://doc.r
 
 ### Milestone 2: Returning HTML
 
-TBA
+This milestone is for successfully returning an HTML file to clients who connected to the web server. We did this by adding code in the `handle_connection` function to write a response to the stream. In order to be valid, the response must consist of status line (which in our case is `HTTP/1.1 200 OK`), `Content-Length` header, and the contents. The contents are from a simple HTML file we created called `hello.html`, attached below when rendered by the browser. This HTML file is written into the `contents` string by the `fs::read-to_string` function. The response is first converted into bytes by `as_bytes` method, before being written to the stream by `write_all` method. 
+
+![commit 2 screenshot](<Screenshot 2024-03-16 at 19.03.43.png>)
 
 <br>
 
