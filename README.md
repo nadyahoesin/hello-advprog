@@ -18,15 +18,15 @@ This milestone is for successfully returning an HTML file to clients who connect
 
 ### Milestone 3: Validating request and selectively responding
 
-This milestone is for successfully validating requests and returning different responseS based on the validity of the requests. We validate requests in the `handle_connection` function by examining the first line of each request. If it equals `GET / HTTP/1.1`, then it is a valid request. Clients trying to access other path (e.g. `127.0.0.1:7878/hello`) would send requests with different first line than above, which will be regarded as invalid requests. We handle valid requests the same way as before. For invalid request, we write a response to the stream with `HTTP/1.1 404 NOT FOUND` status line and contents from `404.html`, attached below when rendered by the browser. Initially, we did all this using similar code in two if blocks, only differing in status line and contents' filename. We then refactored the code to avoid repetitions by only using the if-clause to determine the status line and contents' filename, then executing the same code for both scenario (valid and invalid request).
+This milestone is for successfully validating requests and returning different responses based on the validity of the requests. We validate requests in the `handle_connection` function by examining the first line of each request. If it equals `GET / HTTP/1.1`, then it is a valid request. Clients trying to access other path (e.g. `127.0.0.1:7878/hello`) would send requests with different first line than above, which will be regarded as invalid requests. We handle valid requests the same way as before. For invalid request, we write a response to the stream with `HTTP/1.1 404 NOT FOUND` status line and contents from `404.html`, attached below when rendered by the browser. Initially, we did all this using similar code in two if blocks, only differing in status line and contents' filename. We then refactored the code to avoid repetitions by only using the if-clause to determine the status line and contents' filename, then executing the same code for both scenario (valid and invalid request).
 
 ![commit 3 screenshot](<img/commit3.png>)
 
 <br>
 
-### Milestone 4: Simulation slow response
+### Milestone 4: Simulating slow response
 
-TBA
+This milestone is for successfully simulating slow responses due to a slow-processing request. Because the server is single-threaded, all requests are handled sequentially, one by one. One slow-processing request could affect other requests by delaying the handling of those requests. This slow-processing request is simulated by the path `127.0.0.1:7878/sleep`, which would cause the server to sleep for 5 seconds before responding. It's easy to imagine how multiple requests, especially if they made the same slow-processing request, would cause an excessively long delay in response time. This scenario shows the need for multithreading, which would make the application handle multiple requests simultaneously.  
 
 <br>
 
