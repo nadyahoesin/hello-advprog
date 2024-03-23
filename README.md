@@ -1,8 +1,8 @@
 # Reflection
 
-### Milestone 1: Single threaded web server
+### Milestone 1: Single-threaded web server
 
-This milestone is for successfully building a single threaded web server that clients can connect to but isn't yet sending any data back. We did this by firstly creating an instance of [`TcpListener`](https://doc.rust-lang.org/std/net/struct.TcpListener.html) that is bound to the local address `127.0.0.1:7878`. The method `incoming` on the listener returns an iterator over incoming TCP streams. Each streams represent a connection between the client and the server. We iterate over these streams to call our `handle_connection` function on them. 
+This milestone is for successfully building a single-threaded web server that clients can connect to but isn't yet sending any data back. We did this by firstly creating an instance of [`TcpListener`](https://doc.rust-lang.org/std/net/struct.TcpListener.html) that is bound to the local address `127.0.0.1:7878`. The method `incoming` on the listener returns an iterator over incoming TCP streams. Each streams represent a connection between the client and the server. We iterate over these streams to call our `handle_connection` function on them. 
 
 The `handle_connection` function will first create a [`BufReader`](https://doc.rust-lang.org/std/io/struct.BufReader.html) instance from the input stream. `BufReader` is a struct that creates a buffer to any reader. The reason it's preferred to use a buffer rather than directly working with the reader is because every call to read on `TcpStream` results in a system call, which could be excessively inefficient. We then use a series of method to convert this buffer into an iterator over the lines in the buffer (`lines`), map those lines to their values rather than in `Result` structs (`map`), and take lines until we get a line that is the empty string (`take_while`). Finally, we print these lines out using debug formatting to examine them.
 
@@ -32,7 +32,9 @@ This milestone is for successfully simulating slow responses due to a slow-proce
 
 ### Milestone 5: Multithreaded server
 
-TBA
+This milestone is for successfully turning the single-threaded server into a multi-threaded server. We did this by implementing a new struct `ThreadPool`. `ThreadPool` is a pool of a small number of spawned threads that are waiting and ready to handle a task. It has two methods, `new` and `execute`. `new` function creates a new instance of `ThreadPool` with the inputted amount of threads and return that instance. It also creates an `mpsc` channel with itself as a sender and every spawned threads as receivers. Spawned threads are wrapped in a newly implemented struct `Worker`, which stores the id of the thread and the thread itself. `execute` function sends incoming tasks to the `mpsc` channel that one of the `workers`, or threads, can accept. 
+
+We modify the main function to first create a new instance of `ThreadPool` with 4 threads and for each incoming connection, the task of handling connection done by the `handle_connection` function is executed by one of the waiting threads.
 
 <br>
 
