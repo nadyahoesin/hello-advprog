@@ -34,10 +34,10 @@ This milestone is for successfully simulating slow responses due to a slow-proce
 
 This milestone is for successfully turning the single-threaded server into a multi-threaded server. We did this by implementing a new struct `ThreadPool`. `ThreadPool` is a pool of a small number of spawned threads that are waiting and ready to handle a task. It has two methods, `new` and `execute`. `new` function creates a new instance of `ThreadPool` with the inputted amount of threads and return that instance. It also creates an `mpsc` channel with itself as a sender and every spawned threads as receivers. Spawned threads are wrapped in a newly implemented struct `Worker`, which stores the id of the thread and the thread itself. `execute` function sends incoming tasks to the `mpsc` channel that one of the `workers`, or threads, can accept. 
 
-We modify the main function to first create a new instance of `ThreadPool` with 4 threads and for each incoming connection, the task of handling connection done by the `handle_connection` function is executed by one of the waiting threads.
+We modified the main function to first create a new instance of `ThreadPool` with 4 threads and for each incoming connection, the task of handling connection done by the `handle_connection` function is executed by one of the waiting threads.
 
 <br>
 
 ### Bonus: Function improvement
 
-TBA
+This milestone is for successfully changing the `new` method that returns an instance of `ThreadPool` with the `build` method that returns an instance of `Result` that contains either a `ThreadPool` instance or a `PoolCreationError` error. Returning a `Result` instance allows the method to not have an assertion to make sure the inputted size is not 0, but rather return an error when the inputted size is 0. Changing the method name from `new` to `build` follows Rust convention, as `new` methods normally return the instances of the struct and `build` methods return `Result` instances. Because of this, we also modified the main function to use `build` method and unwrap the return to get the `ThreadPool` instance. The advantage of using a `build` method instead of the `new` method is for the struct user to be able to decide what to do in the case of an error, whether to ignore it (which we did when we use the method `unwrap` on the result) or display an error message. Assertions are generally avoided in struct methods.

@@ -8,15 +8,10 @@ pub struct ThreadPool {
 type Job = Box<dyn FnOnce() + Send + 'static>;
 
 impl ThreadPool {
-    /// Create a new ThreadPool.
-    ///
-    /// The size is the number of threads in the pool.
-    ///
-    /// # Panics
-    ///
-    /// The `new` function will panic if the size is zero.
-    pub fn new(size: usize) -> ThreadPool {
-        assert!(size != 0);
+    pub fn build(size: usize) -> Result<ThreadPool, PoolCreationError> {
+        if size == 0 {
+            return Err(PoolCreationError);
+        }
 
         let (sender, receiver) = mpsc::channel();
 
@@ -29,10 +24,10 @@ impl ThreadPool {
             workers.push(Worker::new(id, Arc::clone(&receiver)));
         }
 
-        ThreadPool { 
+        Ok(ThreadPool { 
             workers, 
             sender: Some(sender),
-        }
+        })
     }
 
     pub fn execute<F>(&self, f: F)
@@ -44,6 +39,9 @@ impl ThreadPool {
         self.sender.as_ref().unwrap().send(job).unwrap();
     }
 }
+
+#[derive(Debug)]
+pub struct PoolCreationError;
 
 impl Drop for ThreadPool {
     fn drop(&mut self) {
